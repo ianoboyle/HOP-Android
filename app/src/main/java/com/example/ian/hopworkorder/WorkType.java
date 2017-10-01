@@ -54,6 +54,24 @@ public class WorkType {
         return workTypeList;
     }
 
+
+    public static ArrayList<WorkType> getWorksTypesFromJsonArray(JSONArray jsonArray){
+        final ArrayList<WorkType> workTypeList = new ArrayList<>();
+
+        try {
+            // Load data
+            for(int i = 0; i < jsonArray.length(); i++){
+                WorkType workType = new WorkType();
+                workType.setTitle(jsonArray.getJSONObject(i).getString("name"));
+                workType.setId(jsonArray.getJSONObject(i).getInt("id"));
+                workTypeList.add(workType);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return workTypeList;
+    }
+
     private static String loadJsonFromAsset(String filename, Context context) {
         String json = null;
 

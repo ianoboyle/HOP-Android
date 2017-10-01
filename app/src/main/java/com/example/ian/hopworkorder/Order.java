@@ -7,9 +7,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Order {
+public class Order implements Serializable {
 
     String title;
     String description;
@@ -43,6 +44,29 @@ public class Order {
 
                 order.title = recipes.getJSONObject(i).getString("title");
                 order.description = recipes.getJSONObject(i).getString("description");
+
+                orderList.add(order);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return orderList;
+    }
+
+
+    public static ArrayList<Order> getOrdersFromJsonArray(JSONArray jsonArray){
+        final ArrayList<Order> orderList = new ArrayList<>();
+
+        try {
+            // Load data
+
+            // Get Recipe objects from data
+            for(int i = 0; i < jsonArray.length(); i++){
+                Order order = new Order();
+
+                order.title = jsonArray.getJSONObject(i).getString("address");
+                order.description = jsonArray.getJSONObject(i).getString("date");
 
                 orderList.add(order);
             }
