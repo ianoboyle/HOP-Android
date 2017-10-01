@@ -15,6 +15,7 @@ public class Order implements Serializable {
     String title;
     String description;
     String label;
+    int id;
 
     void setTitle(String title){
         this.title = title;
@@ -67,6 +68,7 @@ public class Order implements Serializable {
 
                 order.title = jsonArray.getJSONObject(i).getString("address");
                 order.description = jsonArray.getJSONObject(i).getString("date");
+                order.id = jsonArray.getJSONObject(i).getInt("id");
 
                 orderList.add(order);
             }

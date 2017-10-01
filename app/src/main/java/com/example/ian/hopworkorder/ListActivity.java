@@ -31,6 +31,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,7 +66,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
         final ListView mListView = (ListView) findViewById(R.id.recipe_list_view);
 
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
 
         String url ="http://10.0.0.17:8000/api/user_works/";
@@ -83,14 +86,52 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                             @Override
                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                 Order item = (Order) adapter.getItem(i);
-                                Intent intent = new Intent(ListActivity.this,OrderDetail.class);
+                                final Intent intent = new Intent(ListActivity.this,OrderDetail.class);
                                 intent.putExtra("Order", item);
+                                Date currentTime = Calendar.getInstance().getTime();
+                                Date date = new Date();   // given date
+                                Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
+                                calendar.setTime(date);   // assigns calendar to given date
+                                int hours = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
+                                int minutes = calendar.get(Calendar.MINUTE);
 
-                                System.out.println("LAT: "+lattiude);
-                                System.out.println("LAT: "+longitude);
+                                String url ="http://10.0.0.17:8000/api/works/"+item.id+"/";
+                                JSONObject jsonBody = new JSONObject();
+                                try {
+                                    jsonBody.put("latitude", lattiude);
+                                    jsonBody.put("longitude", longitude);
+                                    jsonBody.put("register_time", hours+":"+minutes);
 
-                                //based on item add info to intent
-                                startActivity(intent);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+
+                                JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                                        (Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
+
+                                            @Override
+                                            public void onResponse(JSONObject response) {
+                                                startActivity(intent);
+                                            }
+
+
+
+                                        }, new Response.ErrorListener() {
+
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                // TODO Auto-generated method stub
+                                            }
+                                        }){
+                                    @Override
+                                    public Map<String, String> getHeaders() throws AuthFailureError {
+                                        Map<String, String> params = new HashMap<String, String>();
+                                        params.put("Authorization", "JWT "+PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("MYTOKEN", ""));
+                                        return params;
+                                    }
+                                };
+                                requestQueue.add(jsObjRequest);
                             };
                         });
                     }

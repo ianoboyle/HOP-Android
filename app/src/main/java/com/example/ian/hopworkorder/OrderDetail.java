@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -24,13 +25,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -44,6 +50,7 @@ public class OrderDetail extends AppCompatActivity {
     private static int RESULT_LOAD_IMAGE = 1;
     final ArrayList<WorkType> workTypesList = new ArrayList<WorkType>();
     ImageButton selectedImageButton;
+    Order order;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +58,7 @@ public class OrderDetail extends AppCompatActivity {
         setContentView(R.layout.activity_order_detail);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        Order order = (Order) getIntent().getSerializableExtra("Order");
+        this.order = (Order) getIntent().getSerializableExtra("Order");
 
 
         // Setup listView
@@ -101,7 +108,7 @@ public class OrderDetail extends AppCompatActivity {
         // Setup items for spinner
 
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        final RequestQueue requestQueue = Volley.newRequestQueue(this);
         String url ="http://10.0.0.17:8000/api/job_types/";
 
         JsonArrayRequest localJReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
@@ -162,21 +169,63 @@ public class OrderDetail extends AppCompatActivity {
         requestQueue.add(localJReq);
 
 
-
-
-
-
-
-
-
         // Capture the layout's TextView and set the string as its text
         final  Button button = (Button) findViewById(R.id.complete_order_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Code here executes on main thread after user presses button
-                Intent intent = new Intent(OrderDetail.this, CustomerFeedbackActivity.class);
-                //based on item add info to intent
-                startActivity(intent);
+                final Intent intent = new Intent(OrderDetail.this, CustomerFeedbackActivity.class);
+
+                String url ="http://10.0.0.17:8000/api/works/"+order.id+"/";
+
+
+
+                VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url, new Response.Listener<NetworkResponse>() {
+                    @Override
+                    public void onResponse(NetworkResponse response) {
+                        String resultResponse = new String(response.data);
+                        // parse success output
+                        startActivity(intent);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<>();
+                        EditText editText = (EditText) findViewById(R.id.edit_text_input);
+                        params.put("report", editText.getText().toString());
+                        String jobTypes = "";
+                        for(int i = 0; i < workTypesList.size(); i++){
+                            jobTypes += workTypesList.get(i).getId() + ",";
+                        }
+                        params.put("job_types", jobTypes);
+
+                        return params;
+                    }
+
+                    @Override
+                    protected Map<String, DataPart> getByteData() {
+                        Map<String, DataPart> params = new HashMap<>();
+                        // file name could found file base or direct access from real path
+                        // for now just get bitmap data from ImageView
+                        params.put("photo1", new DataPart("photo1.jpg", AppHelper.getFileDataFromDrawable(getBaseContext(), button1.getDrawable()), "image/jpeg"));
+                        params.put("photo2", new DataPart("photo2.jpg", AppHelper.getFileDataFromDrawable(getBaseContext(), button2.getDrawable()), "image/jpeg"));
+                        params.put("photo3", new DataPart("photo3.jpg", AppHelper.getFileDataFromDrawable(getBaseContext(), button3.getDrawable()), "image/jpeg"));
+                        params.put("photo4", new DataPart("photo4.jpg", AppHelper.getFileDataFromDrawable(getBaseContext(), button4.getDrawable()), "image/jpeg"));
+                        return params;
+                    }
+
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put("Authorization", "JWT "+PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("MYTOKEN", ""));
+                        return params;
+                    }
+                };
+                VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
             }
         });
     }
