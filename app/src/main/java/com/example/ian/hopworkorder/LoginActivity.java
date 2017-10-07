@@ -190,7 +190,8 @@ public class LoginActivity extends AppCompatActivity {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
 
 
-            String url ="http://app.hopcontracting.net/api/token/";
+//            String url ="http://app.hopcontracting.net/api/token/";
+            String url = getString(R.string.global_url) + "/token/";
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("username", email);
             jsonBody.put("password", password);

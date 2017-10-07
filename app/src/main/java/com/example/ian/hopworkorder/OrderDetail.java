@@ -119,7 +119,7 @@ public class OrderDetail extends AppCompatActivity {
         });
         // Setup items for spinner
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String url ="http://app.hopcontracting.net/api/job_types/";
+        String url = getString(R.string.global_url) + "/job_types/";
         JsonArrayRequest localJReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -204,8 +204,7 @@ public class OrderDetail extends AppCompatActivity {
 
                     final Intent intent = new Intent(OrderDetail.this, CustomerFeedbackActivity.class);
 
-                    String url = "http://10.0.0.17:8000/api/works/" + order.id + "/";
-
+                    String url = getString(R.string.global_url) + "/works/" + order.id + "/";
 
                     VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url, new Response.Listener<NetworkResponse>() {
                         @Override

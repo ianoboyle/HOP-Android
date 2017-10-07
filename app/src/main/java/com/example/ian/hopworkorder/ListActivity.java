@@ -76,9 +76,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
 
     public void makeRequest(){
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
-
-        String url ="http://app.hopcontracting.net/api/user_works/";
-
+        String url = getString(R.string.global_url) + "/user_works/";
         JsonArrayRequest localJReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
                     @Override
@@ -144,6 +142,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        // this is an error
                     }
                 }) {//here before semicolon ; and use { }.
             @Override
