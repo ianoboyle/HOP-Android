@@ -1,5 +1,8 @@
 package com.example.ian.hopworkorder;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
@@ -21,6 +25,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -50,6 +55,7 @@ public class OrderDetail extends AppCompatActivity {
     private static int RESULT_LOAD_IMAGE = 1;
     final ArrayList<WorkType> workTypesList = new ArrayList<WorkType>();
     ImageButton selectedImageButton;
+    EditText reportField;
     Order order;
     ImageButton button1;
     Bitmap bmp1;
@@ -59,6 +65,8 @@ public class OrderDetail extends AppCompatActivity {
     Bitmap bmp3;
     ImageButton button4;
     Bitmap bmp4;
+
+    private View mProgressView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +79,10 @@ public class OrderDetail extends AppCompatActivity {
         final ListView mWorkTypesListView = (ListView) findViewById(R.id.work_types_list_view);
         TextView textView = (TextView) findViewById(R.id.address_text_view);
         textView.setText(order.title);
+        // Setup EditText
+        reportField = (EditText) findViewById(R.id.edit_text_input);
+        // Setup Progress View
+        mProgressView = (ProgressBar) findViewById(R.id.submit_progress);
         // Setup Image buttons
         button1 = (ImageButton) findViewById(R.id.imageButton);
         button2 = (ImageButton) findViewById(R.id.imageButton2);
@@ -107,7 +119,7 @@ public class OrderDetail extends AppCompatActivity {
         });
         // Setup items for spinner
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String url ="http://10.0.0.17:8000/api/job_types/";
+        String url ="http://app.hopcontracting.net/api/job_types/";
         JsonArrayRequest localJReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -188,6 +200,7 @@ public class OrderDetail extends AppCompatActivity {
                     focusView.requestFocus();
                 } else {
 
+                    showProgress(true);
 
                     final Intent intent = new Intent(OrderDetail.this, CustomerFeedbackActivity.class);
 
@@ -199,6 +212,7 @@ public class OrderDetail extends AppCompatActivity {
                         public void onResponse(NetworkResponse response) {
                             String resultResponse = new String(response.data);
                             // parse success output
+                            showProgress(false);
                             intent.putExtra("Order", order);
                             startActivity(intent);
                         }
@@ -206,6 +220,7 @@ public class OrderDetail extends AppCompatActivity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             error.printStackTrace();
+                            showProgress(false);
                         }
                     }) {
                         @Override
@@ -217,7 +232,6 @@ public class OrderDetail extends AppCompatActivity {
                                 jobTypes += workTypesList.get(i).getId() + ",";
                             }
                             params.put("job_types", jobTypes);
-
                             return params;
                         }
 
@@ -313,6 +327,35 @@ public class OrderDetail extends AppCompatActivity {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
             selectedImageButton.setImageBitmap((BitmapFactory.decodeFile(picturePath)));
+        }
+    }
+
+
+    /**
+     * Shows the progress UI and hides the login form.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            reportField.setVisibility(show ? View.GONE : View.VISIBLE);
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
         }
     }
 }

@@ -47,7 +47,7 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
                 final Intent goToNextActivity = new Intent(getApplicationContext(), ListActivity.class);
 
 
-                String url ="http://10.0.0.17:8000/api/works/"+order.id+"/";
+                String url ="http://app.hopcontracting.net/api/works/"+order.id+"/";
                 VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url, new Response.Listener<NetworkResponse>() {
                     @Override
                     public void onResponse(NetworkResponse response) {

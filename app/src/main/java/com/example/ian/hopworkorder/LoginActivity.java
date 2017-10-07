@@ -123,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
 
-        String url ="http://10.0.0.17:8000/api/verify/";
+        String url ="http://app.hopcontracting.net/api/verify/";
         JSONObject jsonBody = new JSONObject();
         jsonBody.put("token", token);
 
@@ -190,7 +190,7 @@ public class LoginActivity extends AppCompatActivity {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
 
 
-            String url ="http://10.0.0.17:8000/api/token/";
+            String url ="http://app.hopcontracting.net/api/token/";
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("username", email);
             jsonBody.put("password", password);

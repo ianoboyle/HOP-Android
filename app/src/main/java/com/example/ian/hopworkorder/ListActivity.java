@@ -77,7 +77,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
     public void makeRequest(){
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
-        String url ="http://10.0.0.17:8000/api/user_works/";
+        String url ="http://app.hopcontracting.net/api/user_works/";
 
         JsonArrayRequest localJReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
@@ -100,7 +100,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                                 int hours = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
                                 int minutes = calendar.get(Calendar.MINUTE);
 
-                                String url ="http://10.0.0.17:8000/api/works/"+item.id+"/";
+                                String url ="http://app.hopcontracting.net/api/works/"+item.id+"/";
                                 JSONObject jsonBody = new JSONObject();
                                 try {
                                     jsonBody.put("latitude", lattiude);

@@ -10,7 +10,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@drawable/background"
-    tools:context="com.example.ian.hopworkorder.LoginActivity">
+    tools:context="com.example.ian.hopworkorder.LoginActivity"
+    android:weightSum="1">
 
     <!-- Login progress -->
     <ProgressBar
@@ -25,17 +26,18 @@
 
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/background"
-        android:scaleType = "centerCrop">
+        android:layout_height="156dp"
+        android:layout_weight="0.19"
+        android:scaleType="centerCrop"
+        android:src="@drawable/background">
 
 
         <LinearLayout
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="#FFFF">
+            android:background="#FFFF"
+            android:orientation="vertical">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
