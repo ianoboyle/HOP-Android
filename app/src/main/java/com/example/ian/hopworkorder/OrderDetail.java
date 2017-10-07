@@ -51,6 +51,14 @@ public class OrderDetail extends AppCompatActivity {
     final ArrayList<WorkType> workTypesList = new ArrayList<WorkType>();
     ImageButton selectedImageButton;
     Order order;
+    ImageButton button1;
+    Bitmap bmp1;
+    ImageButton button2;
+    Bitmap bmp2;
+    ImageButton button3;
+    Bitmap bmp3;
+    ImageButton button4;
+    Bitmap bmp4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,21 +67,15 @@ public class OrderDetail extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         this.order = (Order) getIntent().getSerializableExtra("Order");
-
-
         // Setup listView
         final ListView mWorkTypesListView = (ListView) findViewById(R.id.work_types_list_view);
-
-
         TextView textView = (TextView) findViewById(R.id.address_text_view);
         textView.setText(order.title);
-
         // Setup Image buttons
-        final ImageButton button1 = (ImageButton) findViewById(R.id.imageButton);
-        final ImageButton button2 = (ImageButton) findViewById(R.id.imageButton2);
-        final ImageButton button3 = (ImageButton) findViewById(R.id.imageButton3);
-        final ImageButton button4 = (ImageButton) findViewById(R.id.imageButton4);
-
+        button1 = (ImageButton) findViewById(R.id.imageButton);
+        button2 = (ImageButton) findViewById(R.id.imageButton2);
+        button3 = (ImageButton) findViewById(R.id.imageButton3);
+        button4 = (ImageButton) findViewById(R.id.imageButton4);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,14 +105,9 @@ public class OrderDetail extends AppCompatActivity {
                 showPickImageDialog();
             }
         });
-
-
         // Setup items for spinner
-
-
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         String url ="http://10.0.0.17:8000/api/job_types/";
-
         JsonArrayRequest localJReq = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -173,59 +170,86 @@ public class OrderDetail extends AppCompatActivity {
         final  Button button = (Button) findViewById(R.id.complete_order_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                final Intent intent = new Intent(OrderDetail.this, CustomerFeedbackActivity.class);
 
-                String url ="http://10.0.0.17:8000/api/works/"+order.id+"/";
+                final EditText editText = (EditText) findViewById(R.id.edit_text_input);
+
+                View focusView = null;
+                Boolean cancel = false;
+
+                // Check for a valid email address.
+                if (editText.getText().toString().isEmpty()) {
+                    editText.setError(getString(R.string.report_field_required));
+                    focusView = editText;
+                    cancel = true;
+                }
+                if (cancel) {
+                    // There was an error; don't attempt login and focus the first
+                    // form field with an error.
+                    focusView.requestFocus();
+                } else {
 
 
+                    final Intent intent = new Intent(OrderDetail.this, CustomerFeedbackActivity.class);
 
-                VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url, new Response.Listener<NetworkResponse>() {
-                    @Override
-                    public void onResponse(NetworkResponse response) {
-                        String resultResponse = new String(response.data);
-                        // parse success output
-                        startActivity(intent);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                    }
-                }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        Map<String, String> params = new HashMap<>();
-                        EditText editText = (EditText) findViewById(R.id.edit_text_input);
-                        params.put("report", editText.getText().toString());
-                        String jobTypes = "";
-                        for(int i = 0; i < workTypesList.size(); i++){
-                            jobTypes += workTypesList.get(i).getId() + ",";
+                    String url = "http://10.0.0.17:8000/api/works/" + order.id + "/";
+
+
+                    VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url, new Response.Listener<NetworkResponse>() {
+                        @Override
+                        public void onResponse(NetworkResponse response) {
+                            String resultResponse = new String(response.data);
+                            // parse success output
+                            intent.putExtra("Order", order);
+                            startActivity(intent);
                         }
-                        params.put("job_types", jobTypes);
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            error.printStackTrace();
+                        }
+                    }) {
+                        @Override
+                        protected Map<String, String> getParams() {
+                            Map<String, String> params = new HashMap<>();
+                            params.put("report", editText.getText().toString());
+                            String jobTypes = "";
+                            for (int i = 0; i < workTypesList.size(); i++) {
+                                jobTypes += workTypesList.get(i).getId() + ",";
+                            }
+                            params.put("job_types", jobTypes);
 
-                        return params;
-                    }
+                            return params;
+                        }
 
-                    @Override
-                    protected Map<String, DataPart> getByteData() {
-                        Map<String, DataPart> params = new HashMap<>();
-                        // file name could found file base or direct access from real path
-                        // for now just get bitmap data from ImageView
-                        params.put("photo1", new DataPart("photo1.jpg", AppHelper.getFileDataFromDrawable(getBaseContext(), button1.getDrawable()), "image/jpeg"));
-                        params.put("photo2", new DataPart("photo2.jpg", AppHelper.getFileDataFromDrawable(getBaseContext(), button2.getDrawable()), "image/jpeg"));
-                        params.put("photo3", new DataPart("photo3.jpg", AppHelper.getFileDataFromDrawable(getBaseContext(), button3.getDrawable()), "image/jpeg"));
-                        params.put("photo4", new DataPart("photo4.jpg", AppHelper.getFileDataFromDrawable(getBaseContext(), button4.getDrawable()), "image/jpeg"));
-                        return params;
-                    }
+                        @Override
+                        protected Map<String, DataPart> getByteData() {
+                            Map<String, DataPart> params = new HashMap<>();
+                            // file name could found file base or direct access from real path
+//                        // for now just get bitmap data from ImageView
+                            if (bmp1 != null) {
+                                params.put("photo1", new DataPart("photo1.jpg", AppHelper.getFileDataFromBitmap(getBaseContext(), bmp1), "image/jpeg"));
+                            }
+                            if (bmp2 != null) {
+                                params.put("photo2", new DataPart("photo2.jpg", AppHelper.getFileDataFromBitmap(getBaseContext(), bmp2), "image/jpeg"));
+                            }
+                            if (bmp3 != null) {
+                                params.put("photo3", new DataPart("photo3.jpg", AppHelper.getFileDataFromBitmap(getBaseContext(), bmp3), "image/jpeg"));
+                            }
+                            if (bmp4 != null) {
+                                params.put("photo4", new DataPart("photo4.jpg", AppHelper.getFileDataFromBitmap(getBaseContext(), bmp4), "image/jpeg"));
+                            }
+                            return params;
+                        }
 
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<String, String>();
-                        params.put("Authorization", "JWT "+PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("MYTOKEN", ""));
-                        return params;
-                    }
-                };
-                VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put("Authorization", "JWT " + PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("MYTOKEN", ""));
+                            return params;
+                        }
+                    };
+                    VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+                }
             }
         });
     }
@@ -264,6 +288,20 @@ public class OrderDetail extends AppCompatActivity {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             selectedImageButton.setImageBitmap(photo);
+
+            if (selectedImageButton == button1){
+                bmp1 = photo;
+            }
+            if (selectedImageButton == button2){
+                bmp2 = photo;
+            }
+            if (selectedImageButton == button3){
+                bmp3 = photo;
+            }
+            if (selectedImageButton == button4){
+                bmp4 = photo;
+            }
+
             selectedImageButton = null;
         }
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {

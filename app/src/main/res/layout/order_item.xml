@@ -1,42 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
+
 
 
     <RelativeLayout
-        android:id="@+id/recipe_list_text_layout"
+        android:id="@+id/order_list_text_Layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:minHeight="80dp"
+        android:background="#FFFFFF"
+        >
+
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            app:srcCompat="@drawable/arrow_right"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="13dp"
+            android:layout_marginEnd="13dp" />
 
         <TextView
             android:id="@+id/order_title"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             android:textSize="18sp"
             android:minHeight="200dp"
             tools:text="Title"
-            />
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
         <TextView
             android:id="@+id/order_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:ellipsize="end"
             android:maxLines="3"
             android:textSize="16sp"
             tools:text="Subtitle"
             android:minHeight="200dp"
-
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginRight="21dp"
-            android:layout_marginEnd="21dp" />
+            android:layout_marginRight="103dp"
+            android:layout_marginEnd="103dp" />
+
 
 
     </RelativeLayout>
+
+
+
 </RelativeLayout>

@@ -4,14 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context="com.example.ian.hopworkorder.CustomerFeedbackActivity">
 
         <TextView
+            android:textColor="#FFFF"
             android:id="@+id/title_feedback"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Thank You!"
+            android:text="@string/thank_you"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -32,6 +34,7 @@
         <com.github.gcacace.signaturepad.views.SignaturePad
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:background="#FFFF"
             android:id="@+id/signature_pad"
             android:layout_width="364dp"
             android:layout_height="176dp"
@@ -45,6 +48,7 @@
 
     <Button
         android:id="@+id/button"
+        android:background="#FFFF"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

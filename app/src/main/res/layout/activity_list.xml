@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context="com.example.ian.hopworkorder.ListActivity">
+
 
 
     <ListView
@@ -12,7 +15,8 @@
         android:layout_width="453dp"
         android:layout_height="534dp"
         tools:layout_editor_absoluteX="-1dp"
-        tools:layout_editor_absoluteY="-4dp">
+        tools:layout_editor_absoluteY="-4dp"
+        tools:ignore="MissingConstraints">
 
     </ListView>
 

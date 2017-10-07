@@ -2,33 +2,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/work_type_list_detail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:maxLines="1"
-        android:textColor="#000000"
-        android:textSize="12sp"
-        tools:text="Detail"
-        />
+    android:layout_height="match_parent"
+    android:minHeight="50dp"
+    android:background="#FFFF"
+    >
 
     <RelativeLayout
         android:id="@+id/work_type_list_text_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true">
 
         <TextView
             android:id="@+id/work_type_title"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             android:textSize="18sp"
+            android:minHeight="40dp"
             tools:text="Title"
 
-            />
+            android:layout_alignParentTop="true" />
     </RelativeLayout>
 </RelativeLayout>
