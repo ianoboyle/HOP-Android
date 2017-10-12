@@ -1,6 +1,9 @@
 package com.example.ian.hopworkorder;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +13,11 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -21,6 +27,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -48,6 +55,10 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
     double lattiude;
     double longitude;
     ListView mListView;
+    ProgressBar mProgressView;
+    ConstraintLayout constraint_layout;
+    LocationManager locationManager;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -75,12 +86,14 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
 
 
     public void makeRequest(){
+        showProgress(true);
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         String url = getString(R.string.global_url) + "/user_works/";
         JsonArrayRequest localJReq = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
+                        showProgress(false);
                         final ArrayList<Order> orderList = Order.getOrdersFromJsonArray(response);
                         final OrderAdapter adapter = new OrderAdapter(getBaseContext(), orderList);
                         mListView.setAdapter(adapter);
@@ -97,8 +110,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                                 calendar.setTime(date);   // assigns calendar to given date
                                 int hours = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
                                 int minutes = calendar.get(Calendar.MINUTE);
-
-                                String url ="http://app.hopcontracting.net/api/works/"+item.id+"/";
+                                String url = getString(R.string.global_url) + "/works/"+item.id+"/";
                                 JSONObject jsonBody = new JSONObject();
                                 try {
                                     jsonBody.put("latitude", lattiude);
@@ -115,6 +127,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
 
                                             @Override
                                             public void onResponse(JSONObject response) {
+                                                showProgress(false);
                                                 startActivity(intent);
                                             }
 
@@ -149,11 +162,13 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String>  params = new HashMap<String, String>();
                 params.put("Authorization", "JWT "+PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("MYTOKEN", ""));
-                return params;            }
+                return params;
+            }
 
             @Override
             public String getBodyContentType() {
                 return super.getBodyContentType();
+
             }
         };
 
@@ -163,15 +178,76 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        checkLocationPermission();
         setContentView(R.layout.activity_list);
-        final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         mListView = (ListView) findViewById(R.id.recipe_list_view);
+        mListView.setEmptyView( findViewById( R.id.empty_list_view ) );
         this.makeRequest();
+    }
+
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
+    public boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+
+                        //Request location updates:
+                        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+                    }
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+
+                }
+                return;
+            }
+
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (checkLocationPermission()) {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+
+                //Request location updates:
+                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 400, 1, this);
+            }
+        }
+
     }
 
     @Override
@@ -192,5 +268,46 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
 
     @Override
     public void onProviderDisabled(String s) {
+    }
+
+
+    /**
+     * Shows the progress UI and hides the login form.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        constraint_layout = (ConstraintLayout) findViewById(R.id.list_constraint_layout);
+        mProgressView = (ProgressBar) findViewById(R.id.list_progress_bar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+
+            constraint_layout.setVisibility(show ? View.GONE : View.VISIBLE);
+            constraint_layout.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    constraint_layout.setVisibility(show ? View.GONE : View.VISIBLE);
+
+                }
+            });
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            constraint_layout.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
     }
 }

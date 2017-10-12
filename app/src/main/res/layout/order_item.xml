@@ -1,62 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="150dp"
+    android:background="#FFFF"
+    tools:context="com.example.ian.hopworkorder.OrderDetail"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="81dp">
 
 
-
-    <RelativeLayout
-        android:id="@+id/order_list_text_Layout"
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minHeight="80dp"
-        android:background="#FFFFFF"
-        >
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="36dp"
+        android:text="@string/location"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/order_title"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_alignEnd="@+id/textView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/textView"
+        android:layout_alignTop="@id/order_title"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:minHeight="200dp"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:text="Title" />
+
+    <TextView
+        android:id="@+id/order_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="16dp"
+        android:maxLines="3"
+        android:minHeight="200dp"
+        android:textSize="16sp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Subtitle"
+        app:layout_constraintLeft_toRightOf="@+id/date"
+        android:layout_marginLeft="8dp" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/date"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="144dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <ImageView
+        android:visibility="visible"
+        android:id="@+id/imageView"
+        android:layout_height="60dp"
+        android:layout_width="60dp"
+        android:src="@drawable/arrow_right"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="45dp"
+        app:layout_constraintLeft_toRightOf="@+id/order_subtitle"
+        android:layout_marginLeft="0dp" />
 
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            app:srcCompat="@drawable/arrow_right"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="13dp"
-            android:layout_marginEnd="13dp" />
-
-        <TextView
-            android:id="@+id/order_title"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:textSize="18sp"
-            android:minHeight="200dp"
-            tools:text="Title"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-        <TextView
-            android:id="@+id/order_subtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:maxLines="3"
-            android:textSize="16sp"
-            tools:text="Subtitle"
-            android:minHeight="200dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="103dp"
-            android:layout_marginEnd="103dp" />
-
-
-
-    </RelativeLayout>
-
-
-
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

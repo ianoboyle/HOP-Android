@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">hopWorkOrder</string>
+    <string name="app_name">HOP Contracting</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -14,10 +14,25 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="workTypesText">"Work Types"</string>
+    <string name="workTypesText">"Select Job Type"</string>
     <string name="submit_report">Submit Report</string>
     <string name="report_hint">Enter your report here</string>
     <string name="thank_you">Thank You!</string>
-    <!--<string name="global_url">http://app.hopcontracting.net/api</string>-->
-    <string name="global_url">http://10.0.0.17:8000/api</string>
+    <string name="global_url">https://app.hopcontracting.net/api</string>
+    <!--<string name="global_url">http://10.0.0.17:8000/api</string>-->
+    <string name="welcome">Welcome!</string>
+    <string name="location">Location:</string>
+    <string name="date">Date:</string>
+    <string name="service">How would you rate your service?</string>
+    <string name="all_of_your_work_is_completed">You have completed all of your jobs</string>
+    <string name="title_activity_user_selector">UserSelector</string>
+    <string name="customer">Customer</string>
+    <string name="worker">Worker</string>
+    <string name="what_describes_you_best">What describes you best?</string>
+    <string name="title_activity_request">RequestActivity</string>
+    <string name="title_activity_customer_request_form">CustomerRequestForm</string>
+    <string name="email_hint">Email</string>
+    <string name="phone_number_hint">Phone Number</string>
+    <string name="please_describe_your_request_here">Please describe your request here</string>
+    <string name="submit">Submit</string>
 </resources>

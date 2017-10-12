@@ -3,16 +3,21 @@ package com.example.ian.hopworkorder;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.Rating;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.constraint.ConstraintLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 
 import com.android.volley.AuthFailureError;
@@ -29,6 +34,9 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
     View mFormView;
     Order order;
 
+    ProgressBar mProgressBar;
+    ConstraintLayout mConstraintLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +46,8 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
         this.order = (Order) getIntent().getSerializableExtra("Order");
         Button mButton = (Button) findViewById(R.id.button);
 
+        mProgressBar = (ProgressBar) findViewById(R.id.customer_feedback_progress);
+        mConstraintLayout = (ConstraintLayout) findViewById(R.id.customer_feedback_constraint_layout);
 
         final SignaturePad signature = (SignaturePad) findViewById(R.id.signature_pad);
 
@@ -53,7 +63,16 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
                     public void onResponse(NetworkResponse response) {
                         String resultResponse = new String(response.data);
                         // parse success output
-                        startActivity(goToNextActivity);
+                        showProgress(false);
+                        AlertDialog alertDialog = new AlertDialog.Builder(CustomerFeedbackActivity.this).create();
+                        alertDialog.setTitle("Thank you!");
+                        alertDialog.setMessage("Your Order has been completed");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        startActivity(goToNextActivity);                                    }
+                                });
+                        alertDialog.show();
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -86,14 +105,12 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
                     }
                 };
                 VolleySingleton.getInstance(getBaseContext()).addToRequestQueue(multipartRequest);
+                showProgress(true);
             }
         });
 
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
@@ -102,28 +119,28 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mFormView.animate().setDuration(shortAnimTime).alpha(
+
+            mConstraintLayout.setVisibility(show ? View.GONE : View.VISIBLE);
+            mConstraintLayout.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
                 }
             });
 
-            mFormView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mFormView.animate().setDuration(shortAnimTime).alpha(
+            mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressBar.animate().setDuration(shortAnimTime).alpha(
                     show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mFormView.setVisibility(show ? View.VISIBLE : View.GONE);
+                    mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             });
         } else {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
-            mFormView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+            mConstraintLayout.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 }

@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,10 +25,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -43,8 +47,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +64,8 @@ public class OrderDetail extends AppCompatActivity {
     private static int RESULT_LOAD_IMAGE = 1;
     final ArrayList<WorkType> workTypesList = new ArrayList<WorkType>();
     ImageButton selectedImageButton;
+    ConstraintLayout mConstraintLayout;
+
     EditText reportField;
     Order order;
     ImageButton button1;
@@ -77,12 +88,14 @@ public class OrderDetail extends AppCompatActivity {
         this.order = (Order) getIntent().getSerializableExtra("Order");
         // Setup listView
         final ListView mWorkTypesListView = (ListView) findViewById(R.id.work_types_list_view);
+
         TextView textView = (TextView) findViewById(R.id.address_text_view);
         textView.setText(order.title);
+        //Scroll View for progress bar
+
         // Setup EditText
         reportField = (EditText) findViewById(R.id.edit_text_input);
-        // Setup Progress View
-        mProgressView = (ProgressBar) findViewById(R.id.submit_progress);
+
         // Setup Image buttons
         button1 = (ImageButton) findViewById(R.id.imageButton);
         button2 = (ImageButton) findViewById(R.id.imageButton2);
@@ -117,6 +130,8 @@ public class OrderDetail extends AppCompatActivity {
                 showPickImageDialog();
             }
         });
+
+        ImageButton completeOrderButton = (ImageButton) findViewById(R.id.complete_order_button);
         // Setup items for spinner
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         String url = getString(R.string.global_url) + "/job_types/";
@@ -140,13 +155,42 @@ public class OrderDetail extends AppCompatActivity {
                             @Override
                             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                                 if (position != 0) {
-                                    WorkType workType = workTypes.get(position - 1);
+                                    final WorkType workType = workTypes.get(position - 1);
                                     if (!workTypesList.contains(workType) && !workType.getTitle().equals("Select Work Type")) {
                                         workTypesList.add(workType);
                                         final WorkTypeAdapater workTypeAdapater = new WorkTypeAdapater(OrderDetail.this, workTypesList);
                                         mWorkTypesListView.setAdapter(workTypeAdapater);
 
                                         workTypeAdapater.notifyDataSetChanged();
+
+                                        mWorkTypesListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                                            @Override
+                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                AlertDialog alertDialog = new AlertDialog.Builder(OrderDetail.this).create();
+                                                alertDialog.setTitle("Warning");
+                                                final WorkType temp = (WorkType) mWorkTypesListView.getItemAtPosition(i);
+                                                alertDialog.setMessage("Do you want to delete" + temp.getTitle() +  "from the list of job types?");
+                                                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Yes",
+                                                        new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                workTypesList.remove(temp);
+                                                                final WorkTypeAdapater workTypeAdapater = new WorkTypeAdapater(OrderDetail.this, workTypesList);
+                                                                mWorkTypesListView.setAdapter(workTypeAdapater);
+                                                                workTypeAdapater.notifyDataSetChanged();
+                                                            }
+                                                        });
+                                                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "No",
+                                                                new DialogInterface.OnClickListener() {
+                                                                    public void onClick(DialogInterface dialog, int which) {
+                                                                        workTypesList.remove(workType);
+                                                                        final WorkTypeAdapater workTypeAdapater = new WorkTypeAdapater(OrderDetail.this, workTypesList);
+                                                                        mWorkTypesListView.setAdapter(workTypeAdapater);
+                                                                        workTypeAdapater.notifyDataSetChanged();
+                                                                    }
+                                                                });
+                                                alertDialog.show();
+                                                };
+                                            });
                                     }
                                 }
                             }
@@ -166,7 +210,6 @@ public class OrderDetail extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String>  params = new HashMap<String, String>();
-                params.put("Authorization", "JWT "+ PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("MYTOKEN", ""));
                 return params;            }
 
             @Override
@@ -179,7 +222,7 @@ public class OrderDetail extends AppCompatActivity {
 
 
         // Capture the layout's TextView and set the string as its text
-        final  Button button = (Button) findViewById(R.id.complete_order_button);
+        final  ImageButton button = (ImageButton) findViewById(R.id.complete_order_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -276,29 +319,27 @@ public class OrderDetail extends AppCompatActivity {
                 android.R.layout.select_dialog_singlechoice);
         arrayAdapter.add("Gallery");
         arrayAdapter.add("Camera");
-
         builderSingle.setAdapter(
                 arrayAdapter,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                Intent in = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                startActivityForResult(in, RESULT_LOAD_IMAGE);
-
-                            case 1:
-                                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                        if (which == 0){
+                            Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            startActivityForResult(pickPhoto , 1);//one can be replaced with any action code
                         }
-
+                        if (which == 1){
+                            Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(takePicture, 0);//zero can be replaced with any action code
+                        }
                     }
                 });
         builderSingle.show();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             selectedImageButton.setImageBitmap(photo);
 
@@ -315,18 +356,33 @@ public class OrderDetail extends AppCompatActivity {
                 bmp4 = photo;
             }
 
-            selectedImageButton = null;
         }
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-            Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-            selectedImageButton.setImageBitmap((BitmapFactory.decodeFile(picturePath)));
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            final Uri imageUri = data.getData();
+            final InputStream imageStream;
+            try {
+                imageStream = getContentResolver().openInputStream(imageUri);
+                final Bitmap photo = BitmapFactory.decodeStream(imageStream);
+                selectedImageButton.setImageBitmap(photo);
+
+                if (selectedImageButton == button1){
+                    bmp1 = photo;
+                }
+                if (selectedImageButton == button2){
+                    bmp2 = photo;
+                }
+                if (selectedImageButton == button3){
+                    bmp3 = photo;
+                }
+                if (selectedImageButton == button4){
+                    bmp4 = photo;
+                }
+
+            } catch (FileNotFoundException e) {
+                Toast.makeText(OrderDetail.this, "Something went wrong", Toast.LENGTH_LONG).show();
+            }
         }
+        selectedImageButton = null;
     }
 
 
@@ -338,10 +394,21 @@ public class OrderDetail extends AppCompatActivity {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
+        // Setup Progress View
+        mConstraintLayout = (ConstraintLayout) findViewById(R.id.constraint_layout);
+        mProgressView = (ProgressBar) findViewById(R.id.order_detail_progress);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            reportField.setVisibility(show ? View.GONE : View.VISIBLE);
+
+            mConstraintLayout.setVisibility(show ? View.GONE : View.VISIBLE);
+            mConstraintLayout.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mConstraintLayout.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
 
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mProgressView.animate().setDuration(shortAnimTime).alpha(
@@ -355,6 +422,7 @@ public class OrderDetail extends AppCompatActivity {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mConstraintLayout.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 }

@@ -1,9 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/order_detail_linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:background="@drawable/background"
+    tools:context="com.example.ian.hopworkorder.ListActivity"
+    android:weightSum="1">
+
+    <ProgressBar
+    android:id="@+id/list_progress_bar"
+    style="?android:attr/progressBarStyleLarge"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:visibility="gone" />
 
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/list_constraint_layout"
     android:layout_height="match_parent"
     android:background="@drawable/background"
     tools:context="com.example.ian.hopworkorder.ListActivity">
@@ -21,4 +41,20 @@
     </ListView>
 
 
+    <TextView
+            android:id="@+id/empty_list_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFF"
+            android:textSize="30sp"
+            android:layout_centerInParent="true"
+            android:textAlignment="center"
+            android:text="@string/all_of_your_work_is_completed"
+            android:visibility="gone" />
+
 </android.support.constraint.ConstraintLayout>
+
+
+</LinearLayout>
+
+
