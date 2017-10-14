@@ -27,6 +27,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.github.gcacace.signaturepad.views.SignaturePad;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,11 +81,28 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
+                        AlertDialog alertDialog = new AlertDialog.Builder(CustomerFeedbackActivity.this).create();
+                        alertDialog.setTitle("Failure");
+                        alertDialog.setMessage("We are sorry, Something went wrong, please check your connection and try again.");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //
+                                    }
+                                });
+                        alertDialog.show();
                     }
                 }) {
                     @Override
                     protected Map<String, String> getParams() {
                         Map<String, String> params = new HashMap<>();
+                        Date currentTime = Calendar.getInstance().getTime();
+                        Date date = new Date();   // given date
+                        Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
+                        calendar.setTime(date);   // assigns calendar to given date
+                        int hours = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
+                        int minutes = calendar.get(Calendar.MINUTE);
+                        params.put("end_time", hours+":"+minutes);
                         params.put("evaluation", String.valueOf(Math.round(mRatingBar.getRating())));
                         return params;
                     }

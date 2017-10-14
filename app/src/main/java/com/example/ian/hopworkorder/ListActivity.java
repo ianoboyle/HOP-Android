@@ -6,6 +6,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -18,6 +19,7 @@ import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -47,6 +49,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ListActivity extends AppCompatActivity implements LocationListener {
@@ -76,7 +79,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
             case R.id.action_logout:
                 //Logout logic goes here
                 PreferenceManager.getDefaultSharedPreferences(this).edit().remove("MYTOKEN").apply();
-                final Intent intent = new Intent(ListActivity.this,LoginActivity.class);
+                final Intent intent = new Intent(ListActivity.this, UserSelector.class);
                 startActivity(intent);
                 return true;
             default:
@@ -85,8 +88,10 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
     }
 
 
-    public void makeRequest(){
+    public void makeRequest() {
         showProgress(true);
+
+
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         String url = getString(R.string.global_url) + "/user_works/";
         JsonArrayRequest localJReq = new JsonArrayRequest(url,
@@ -101,6 +106,38 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
                             @Override
                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 500.0f, ListActivity.this);
+                                double locLattitude=0;
+                                double locLongitude=0;
+                                if (ActivityCompat.checkSelfPermission(ListActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ListActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                    if (!checkLocationPermission()){
+                                        AlertDialog alertDialog = new AlertDialog.Builder(ListActivity.this).create();
+                                        alertDialog.setTitle("Warning");
+                                        alertDialog.setMessage("The HOP application will no longer be able to update your location, is this ok?");
+                                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Yes",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                    }
+                                                });
+                                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "No",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        checkLocationPermission();
+                                                    }
+                                                });
+                                        alertDialog.show();
+                                    }
+                                    else{
+                                        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                                        locLattitude = location.getLatitude();
+                                        locLongitude = location.getLongitude();
+                                    }
+                                } else {
+                                    Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                                    locLattitude = location.getLatitude();
+                                    locLongitude = location.getLongitude();
+                                }
                                 Order item = (Order) adapter.getItem(i);
                                 final Intent intent = new Intent(ListActivity.this,OrderDetail.class);
                                 intent.putExtra("Order", item);
@@ -113,8 +150,8 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                                 String url = getString(R.string.global_url) + "/works/"+item.id+"/";
                                 JSONObject jsonBody = new JSONObject();
                                 try {
-                                    jsonBody.put("latitude", lattiude);
-                                    jsonBody.put("longitude", longitude);
+                                    jsonBody.put("latitude", locLattitude);
+                                    jsonBody.put("longitude", locLongitude);
                                     jsonBody.put("register_time", hours+":"+minutes);
 
                                 } catch (JSONException e) {
@@ -138,6 +175,16 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                                             @Override
                                             public void onErrorResponse(VolleyError error) {
                                                 // TODO Auto-generated method stub
+                                                AlertDialog alertDialog = new AlertDialog.Builder(ListActivity.this).create();
+                                                alertDialog.setTitle("Failure");
+                                                alertDialog.setMessage("We are sorry, Something went wrong, please check your connection and try again.");
+                                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                                        new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                //
+                                                            }
+                                                        });
+                                                alertDialog.show();
                                             }
                                         }){
                                     @Override
@@ -156,6 +203,16 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // this is an error
+                        AlertDialog alertDialog = new AlertDialog.Builder(ListActivity.this).create();
+                        alertDialog.setTitle("Failure");
+                        alertDialog.setMessage("We are sorry, Something went wrong, please check your connection and try again.");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //
+                                    }
+                                });
+                        alertDialog.show();
                     }
                 }) {//here before semicolon ; and use { }.
             @Override

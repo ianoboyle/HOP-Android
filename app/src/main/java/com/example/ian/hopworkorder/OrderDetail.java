@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -19,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -95,6 +97,9 @@ public class OrderDetail extends AppCompatActivity {
 
         // Setup EditText
         reportField = (EditText) findViewById(R.id.edit_text_input);
+        reportField.setMaxLines(4);
+        reportField.setHorizontallyScrolling(false);
+
 
         // Setup Image buttons
         button1 = (ImageButton) findViewById(R.id.imageButton);
@@ -147,7 +152,7 @@ public class OrderDetail extends AppCompatActivity {
 
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(OrderDetail.this, android.R.layout.simple_spinner_item, spinnerArray);
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        Spinner sItems = (Spinner) findViewById(R.id.work_type_spinner);
+                        final Spinner sItems = (Spinner) findViewById(R.id.work_type_spinner);
                         sItems.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
 
@@ -155,6 +160,11 @@ public class OrderDetail extends AppCompatActivity {
                             @Override
                             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                                 if (position != 0) {
+                                    InputMethodManager inputManager = (InputMethodManager)
+                                            getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                                    inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                                            InputMethodManager.HIDE_NOT_ALWAYS);
                                     final WorkType workType = workTypes.get(position - 1);
                                     if (!workTypesList.contains(workType) && !workType.getTitle().equals("Select Work Type")) {
                                         workTypesList.add(workType);
@@ -169,7 +179,7 @@ public class OrderDetail extends AppCompatActivity {
                                                 AlertDialog alertDialog = new AlertDialog.Builder(OrderDetail.this).create();
                                                 alertDialog.setTitle("Warning");
                                                 final WorkType temp = (WorkType) mWorkTypesListView.getItemAtPosition(i);
-                                                alertDialog.setMessage("Do you want to delete" + temp.getTitle() +  "from the list of job types?");
+                                                alertDialog.setMessage("Do you want to delete " + temp.getTitle() +  " from the list of job types?");
                                                 alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Yes",
                                                         new DialogInterface.OnClickListener() {
                                                             public void onClick(DialogInterface dialog, int which) {
@@ -182,16 +192,13 @@ public class OrderDetail extends AppCompatActivity {
                                                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "No",
                                                                 new DialogInterface.OnClickListener() {
                                                                     public void onClick(DialogInterface dialog, int which) {
-                                                                        workTypesList.remove(workType);
-                                                                        final WorkTypeAdapater workTypeAdapater = new WorkTypeAdapater(OrderDetail.this, workTypesList);
-                                                                        mWorkTypesListView.setAdapter(workTypeAdapater);
-                                                                        workTypeAdapater.notifyDataSetChanged();
                                                                     }
                                                                 });
                                                 alertDialog.show();
                                                 };
                                             });
                                     }
+                                    sItems.setSelection(0);
                                 }
                             }
 
@@ -205,6 +212,16 @@ public class OrderDetail extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        AlertDialog alertDialog = new AlertDialog.Builder(OrderDetail.this).create();
+                        alertDialog.setTitle("Failure");
+                        alertDialog.setMessage("We are sorry, Something went wrong, please check your connection and try again.");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //
+                                    }
+                                });
+                        alertDialog.show();
                     }
                 }) {//here before semicolon ; and use { }.
             @Override
@@ -263,6 +280,16 @@ public class OrderDetail extends AppCompatActivity {
                         public void onErrorResponse(VolleyError error) {
                             error.printStackTrace();
                             showProgress(false);
+                            AlertDialog alertDialog = new AlertDialog.Builder(OrderDetail.this).create();
+                            alertDialog.setTitle("Failure");
+                            alertDialog.setMessage("We are sorry, Something went wrong, please check your connection and try again.");
+                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //
+                                        }
+                                    });
+                            alertDialog.show();
                         }
                     }) {
                         @Override

@@ -29,28 +29,34 @@
     tools:context="com.example.ian.hopworkorder.ListActivity">
 
 
+    <TextView
+        android:id="@+id/empty_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:text="@string/all_of_your_work_is_completed"
+        android:textAlignment="center"
+        android:gravity="center_horizontal"
+        android:textColor="#FFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="asdfasdf"
+        tools:layout_editor_absoluteY="81dp"
+        tools:layout_editor_absoluteX="0dp" />
 
     <ListView
         android:id="@+id/recipe_list_view"
-        android:layout_width="453dp"
-        android:layout_height="534dp"
-        tools:layout_editor_absoluteX="-1dp"
-        tools:layout_editor_absoluteY="-4dp"
-        tools:ignore="MissingConstraints">
+        android:layout_width="379dp"
+        android:layout_height="533dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="1dp">
 
     </ListView>
-
-
-    <TextView
-            android:id="@+id/empty_list_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#FFFF"
-            android:textSize="30sp"
-            android:layout_centerInParent="true"
-            android:textAlignment="center"
-            android:text="@string/all_of_your_work_is_completed"
-            android:visibility="gone" />
 
 </android.support.constraint.ConstraintLayout>
 

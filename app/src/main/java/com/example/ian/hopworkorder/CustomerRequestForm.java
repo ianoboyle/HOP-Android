@@ -3,6 +3,7 @@ package com.example.ian.hopworkorder;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -18,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.PhoneNumberUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -73,6 +75,8 @@ public class CustomerRequestForm extends AppCompatActivity {
         mPhoneNumberEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
         mNotesEditText = (EditText) findViewById(R.id.edit_text_input_notes);
+        mNotesEditText.setMaxLines(4);
+        mNotesEditText.setHorizontallyScrolling(false);
 
         final ListView mWorkTypesListView = (ListView) findViewById(R.id.work_types_list_view);
 
@@ -90,7 +94,7 @@ public class CustomerRequestForm extends AppCompatActivity {
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(CustomerRequestForm.this, android.R.layout.simple_spinner_item, spinnerArray);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                Spinner sItems = (Spinner) findViewById(R.id.work_type_spinner);
+                final Spinner sItems = (Spinner) findViewById(R.id.work_type_spinner);
                 sItems.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
 
@@ -98,12 +102,16 @@ public class CustomerRequestForm extends AppCompatActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                         if (position != 0) {
+                            InputMethodManager inputManager = (InputMethodManager)
+                                    getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                                    InputMethodManager.HIDE_NOT_ALWAYS);
                             final WorkType workType = workTypes.get(position - 1);
                             if (!workTypesList.contains(workType) && !workType.getTitle().equals("Select Work Type")) {
                                 workTypesList.add(workType);
                                 final WorkTypeAdapater workTypeAdapater = new WorkTypeAdapater(CustomerRequestForm.this, workTypesList);
                                 mWorkTypesListView.setAdapter(workTypeAdapater);
-
                                 workTypeAdapater.notifyDataSetChanged();
 
                                 mWorkTypesListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -115,26 +123,23 @@ public class CustomerRequestForm extends AppCompatActivity {
                                         alertDialog.setMessage("Do you want to delete" + temp.getTitle() +  "from the list of job types?");
                                         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Yes",
                                                 new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        workTypesList.remove(temp);
-                                                        final WorkTypeAdapater workTypeAdapater = new WorkTypeAdapater(CustomerRequestForm.this, workTypesList);
-                                                        mWorkTypesListView.setAdapter(workTypeAdapater);
-                                                        workTypeAdapater.notifyDataSetChanged();
-                                                    }
-                                                });
-                                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "No",
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                workTypesList.remove(temp);
+                                                final WorkTypeAdapater workTypeAdapater = new WorkTypeAdapater(CustomerRequestForm.this, workTypesList);
+                                                mWorkTypesListView.setAdapter(workTypeAdapater);
+                                                workTypeAdapater.notifyDataSetChanged();
+                                            }
+                                        });
+                                                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "No",
                                                 new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int which) {
-                                                        workTypesList.remove(workType);
-                                                        final WorkTypeAdapater workTypeAdapater = new WorkTypeAdapater(CustomerRequestForm.this, workTypesList);
-                                                        mWorkTypesListView.setAdapter(workTypeAdapater);
-                                                        workTypeAdapater.notifyDataSetChanged();
                                                     }
                                                 });
                                         alertDialog.show();
                                     };
                                 });
                             }
+                            sItems.setSelection(0);
                         }
                     }
 
@@ -148,6 +153,16 @@ public class CustomerRequestForm extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
+                        alertDialog.setTitle("Failure");
+                        alertDialog.setMessage("We are sorry, Something went wrong, please check your connection and try again.");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //
+                                    }
+                                });
+                        alertDialog.show();
                     }
                 }) {//here before semicolon ; and use { }.
             @Override
@@ -201,6 +216,16 @@ public class CustomerRequestForm extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
                 showProgress(false);
+                AlertDialog alertDialog = new AlertDialog.Builder(CustomerRequestForm.this).create();
+                alertDialog.setTitle("Failure!");
+                alertDialog.setMessage("We are sorry, something went wrong, please try again later!");
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ok",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        });
+                alertDialog.show();
             }
         }) {
             @Override

@@ -102,48 +102,6 @@ public class LoginActivity extends AppCompatActivity {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-
-
-        // Check if we have an access token already
-        String token = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getString("MYTOKEN", "");
-        if (!token.equals("")){
-            // Try to validate the token
-            try {
-                attemptVerify(token);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-
-    }
-
-    private void attemptVerify(String token) throws JSONException{
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-
-
-        String url =getString(R.string.global_url)+"/verify/";
-        JSONObject jsonBody = new JSONObject();
-        jsonBody.put("token", token);
-
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                            Intent goToNextActivity = new Intent(getApplicationContext(), ListActivity.class);
-                            startActivity(goToNextActivity);
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Do nothing
-
-                    }
-                });
-        requestQueue.add(jsObjRequest);
     }
 
     /**
