@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="150dp"
     android:background="#FFFF"
-    tools:context="com.example.ian.hopworkorder.OrderDetail"
+    tools:context="com.hopcontracting.ian.hopworkorder.OrderDetail"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="81dp">
 

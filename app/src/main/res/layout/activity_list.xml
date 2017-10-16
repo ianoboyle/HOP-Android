@@ -8,7 +8,7 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:background="@drawable/background"
-    tools:context="com.example.ian.hopworkorder.ListActivity"
+    tools:context="com.hopcontracting.ian.hopworkorder.ListActivity"
     android:weightSum="1">
 
     <ProgressBar
@@ -26,7 +26,7 @@
     android:id="@+id/list_constraint_layout"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context="com.example.ian.hopworkorder.ListActivity">
+    tools:context="com.hopcontracting.ian.hopworkorder.ListActivity">
 
 
     <TextView

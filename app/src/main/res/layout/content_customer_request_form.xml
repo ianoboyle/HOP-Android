@@ -8,7 +8,7 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:background="@drawable/background"
-    tools:context="com.example.ian.hopworkorder.CustomerRequestForm"
+    tools:context="com.hopcontracting.ian.hopworkorder.CustomerRequestForm"
     android:weightSum="1">
 
 <ProgressBar
@@ -26,7 +26,7 @@
     android:layout_height="match_parent"
     android:id="@+id/customer_request_form_layout"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.ian.hopworkorder.CustomerRequestForm"
+    tools:context="com.hopcontracting.ian.hopworkorder.CustomerRequestForm"
     tools:showIn="@layout/activity_customer_request_form"
     >
 

@@ -2,177 +2,6 @@
 <items version="2" >
 
     <item
-        is-multidex="false"
-        jar="/Users/ian/.android/build-cache/e5c54db24a77d982d221419bec3e85ab39da7f6a/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="952944218ecedea1554a513dec0c14d570642843">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/pre-dexed/debug/classes_f93255a14773a0281c4ef354f5ad7062a3e64014.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/ian/.android/build-cache/f87967b484b01c3db5bd2987c8a315b45e19558a/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="6a022bf00ccd0948a8180c505e8e458bbddd43a6">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/pre-dexed/debug/classes_abe9647d8e35f2d1dc0aef93b0beb453b910262a.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/ian/.android/build-cache/46e7ca4d1856003f20f2cd228a22a04f7bf37ed3/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/pre-dexed/debug/classes_a320c6bf6e6d707f48e41819f660998fe3302974.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/ian/.android/build-cache/ceedfd77cba4e18d1be423497a94a298734fce19/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="88246166d5afb106f532f6e6deae683c66b42c89">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/pre-dexed/debug/classes_c9d239e9b58dab51d34ea8303136f3095425a7b4.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/ian/.android/build-cache/babd57cc097f642f7cbe685d17cfb4466198619b/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="fcd01fd11233459f546c437ec927e9b61bf7caf1">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/pre-dexed/debug/classes_52b32d446ab3e223cd3dd128c702abbc7c72ac1a.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/ian/.android/build-cache/38e5a8e16d155c6ba644f0421e9321a2c676062e/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="c4f45092eee6cdf1a5dbd597b2b6819be652ce2e">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/pre-dexed/debug/classes_9998080556417df2e738ae52f3f104be67e3b66b.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/ian/.android/build-cache/2c868693664b69fd33905550c67bfe625851a8cd/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="8df0e365e40beb151bc42dee20817721a6cab7b0">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/pre-dexed/debug/classes_2fb085daa5307fb626a743357da27a9a1953e205.jar" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.1"
-        sha1="3533380a896578f01448a3756a625606455b4fb5">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_aeb076bde4a207e87f507fcb65df6123bec68edc/classes.dex" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/ian/.android/build-cache/362469ddca5ccadc4888d0b787b3b1e8f3828a1f/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/pre-dexed/debug/classes_6f4c3c863b2bc5d38fd0893e5d438d09e6fc102f.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/ian/.android/build-cache/29426ed2f93db1c291098acbe1470e3de1831bac/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="9935891f23923f39d002087085d9696568a9f657">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/pre-dexed/debug/classes_6c4d5562e8799326b65d3359a738ee14267abb84.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/ian/.android/build-cache/4c42cb7cc1784c0f0d51ddae30c1855ed73a79be/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="cddcd0fb93bc70e27325f2f715b2710332004ebb">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/pre-dexed/debug/classes_691288c398e26af2eb7ed3c8563a65d06c4f175d.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/ian/.android/build-cache/673cd1dbd5fde317cb112037180079f2cefbd0ed/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="18d31838aa4fcc768a8a0516e22cc13b94655d89">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/pre-dexed/debug/classes_f03533e1d12705f440f71f8ec6676fa10c73e6f5.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/ian/.android/build-cache/4dd6f9cb9a9ecb5d32ea7646e846c083c89bdb91/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="2e92aa0163544a804a0b34f169ca61801770839a">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/pre-dexed/debug/classes_3c5ead123aa69052666582de3d2f5efe49dd3a19.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/ian/.android/build-cache/0d086a82439062f167c8e6ee6d11c5128a115ca8/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="47471eb19df288158b00b8d9cfa41bce7373f5cc">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/pre-dexed/debug/classes_379889576d52abceef0991e8a3fb7e23b06d9887.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/ian/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/26.0.0-alpha1/support-annotations-26.0.0-alpha1.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="023ee503b631f69511e335a061ea008f8da60f40">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/pre-dexed/debug/support-annotations-26.0.0-alpha1_0f3952001f493159c5bcd3fc9e19d6ec47550de5.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/ian/.android/build-cache/58d14b29616c54da56f7c796456c39808cc3e27d/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="9eeffee9019a8bc1858b2fd71393ff7786bcac99">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/pre-dexed/debug/classes_36870762b4fddec8af8023fef77579c0e52e7173.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/ian/.android/build-cache/741ba465b1f39423fb6cf10e7add77f212d438f9/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="c56d29136c2257f63f08c29c4e739efb03b06c7d">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/pre-dexed/debug/classes_6fc279f68fc8b440c482999d5853f2cc22ab2f96.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/ian/.android/build-cache/04aa071b58a228391328e644e4121417f97a41de/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="957dc30b1495f8689271e00d56ab09cc9192df02">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/pre-dexed/debug/classes_a8d1c10164fbf150cd3d7ad27a88b0e0dfd69668.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/ian/.gradle/caches/modules-2/files-2.1/com.android.databinding/baseLibrary/2.2.3/b4b51d1925cdfda98fd861230c1ecb5855500129/baseLibrary-2.2.3.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="b4b51d1925cdfda98fd861230c1ecb5855500129">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/pre-dexed/debug/baseLibrary-2.2.3_027847270190f802df803fd6cb0ed3e05788e5e4.jar" />
-    </item>
-    <item
         is-multidex="true"
         jar="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
         jumboMode="true"
@@ -182,22 +11,13 @@
         <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_bb6f73ef734dff4fb5cc4da3849bcbb8168ad102/classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="/Users/ian/.android/build-cache/e05faa93e543f56a866b70b0ff5db56ce9481106/output/jars/classes.jar"
-        jumboMode="false"
+        is-multidex="true"
+        jar="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
         optimize="true"
         revision="26.0.1"
-        sha1="2cd4b982617e544728de0782d718a58ce1b06e3f">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/pre-dexed/debug/classes_99d37de7338a7cbfb6c346f233b0b046aa852b68.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/ian/Library/Android/sdk/extras/m2repository/com/android/support/constraint/constraint-layout-solver/1.0.2/constraint-layout-solver-1.0.2.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
-        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/pre-dexed/debug/constraint-layout-solver-1.0.2_2b492a394f765a596107273a26e927e6380deba7.jar" />
+        sha1="c2c5bc242d0c3db5b1b6bc9b96cd3a2556414bc7">
+        <dex dex="/Users/ian/Documents/mobiledev/workorderandroid/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_aeb076bde4a207e87f507fcb65df6123bec68edc/classes.dex" />
     </item>
 
 </items>

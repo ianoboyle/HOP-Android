@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.ian.hopworkorder.UserSelector"
+    tools:context="com.hopcontracting.ian.hopworkorder.UserSelector"
     tools:showIn="@layout/activity_user_selector"
     android:background="@drawable/background"
     >
