@@ -109,7 +109,7 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
                         Map<String, DataPart> params = new HashMap<>();
                         Bitmap bmp = signature.getSignatureBitmap();
                         if (bmp != null){
-                            params.put("sign", new DataPart("sign.jpg", AppHelper.getFileDataFromBitmap(getBaseContext(), bmp), "image/jpeg"));
+                            params.put("sign", new DataPart("sign.png", AppHelper.getFileDataFromBitmap(getBaseContext(), bmp), "image/png"));
                         }
                         return params;
                     }

@@ -1,5 +1,4 @@
 package com.hopcontracting.ian.hopworkorder;
-
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -19,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,6 +35,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,6 +52,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ListActivity extends AppCompatActivity implements LocationListener {
@@ -63,6 +71,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
         inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -102,11 +111,9 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                             @Override
                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                 locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 500.0f, ListActivity.this);
-                                double locLattitude=0;
-                                double locLongitude=0;
                                 if (ActivityCompat.checkSelfPermission(ListActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ListActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                                     if (!checkLocationPermission()){
+
                                         AlertDialog alertDialog = new AlertDialog.Builder(ListActivity.this).create();
                                         alertDialog.setTitle("Warning");
                                         alertDialog.setMessage("The HOP application will no longer be able to update your location, is this ok?");
@@ -124,14 +131,10 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                                         alertDialog.show();
                                     }
                                     else{
-                                        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                                        locLattitude = location.getLatitude();
-                                        locLongitude = location.getLongitude();
+                                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, ListActivity.this);
                                     }
                                 } else {
-                                    Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                                    locLattitude = location.getLatitude();
-                                    locLongitude = location.getLongitude();
+                                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, ListActivity.this);
                                 }
                                 Order item = (Order) adapter.getItem(i);
                                 final Intent intent = new Intent(ListActivity.this,OrderDetail.class);
@@ -145,8 +148,8 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                                 String url = getString(R.string.global_url) + "/works/"+item.id+"/";
                                 JSONObject jsonBody = new JSONObject();
                                 try {
-                                    jsonBody.put("latitude", locLattitude);
-                                    jsonBody.put("longitude", locLongitude);
+                                    jsonBody.put("latitude", ListActivity.this.lattiude);
+                                    jsonBody.put("longitude", ListActivity.this.longitude);
                                     jsonBody.put("register_time", hours+":"+minutes);
 
                                 } catch (JSONException e) {
@@ -244,7 +247,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
 
             return false;
         } else {
@@ -270,7 +273,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
 
                         //Request location updates:
                         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
                     }
 
                 } else {
@@ -296,7 +299,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
 
                 //Request location updates:
                 locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 400, 1, this);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 400, 1, this);
             }
         }
 
@@ -321,6 +324,8 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
     @Override
     public void onProviderDisabled(String s) {
     }
+
+
 
 
     /**
@@ -362,4 +367,5 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
             constraint_layout.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
+
 }

@@ -298,16 +298,16 @@ public class OrderDetail extends AppCompatActivity {
                             // file name could found file base or direct access from real path
 //                        // for now just get bitmap data from ImageView
                             if (bmp1 != null) {
-                                params.put("photo1", new DataPart("photo1.jpg", AppHelper.getFileDataFromBitmap(getBaseContext(), bmp1), "image/jpeg"));
+                                params.put("photo1", new DataPart("photo1.png", AppHelper.getFileDataFromBitmap(getBaseContext(), bmp1), "image/png"));
                             }
                             if (bmp2 != null) {
-                                params.put("photo2", new DataPart("photo2.jpg", AppHelper.getFileDataFromBitmap(getBaseContext(), bmp2), "image/jpeg"));
+                                params.put("photo2", new DataPart("photo2.png", AppHelper.getFileDataFromBitmap(getBaseContext(), bmp2), "image/png"));
                             }
                             if (bmp3 != null) {
-                                params.put("photo3", new DataPart("photo3.jpg", AppHelper.getFileDataFromBitmap(getBaseContext(), bmp3), "image/jpeg"));
+                                params.put("photo3", new DataPart("photo3.png", AppHelper.getFileDataFromBitmap(getBaseContext(), bmp3), "image/png"));
                             }
                             if (bmp4 != null) {
-                                params.put("photo4", new DataPart("photo4.jpg", AppHelper.getFileDataFromBitmap(getBaseContext(), bmp4), "image/jpeg"));
+                                params.put("photo4", new DataPart("photo4.png", AppHelper.getFileDataFromBitmap(getBaseContext(), bmp4), "image/png"));
                             }
                             return params;
                         }
@@ -354,9 +354,10 @@ public class OrderDetail extends AppCompatActivity {
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK && requestCode != 1) {
+            Uri uriPhoto = data.getData();
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-            selectedImageButton.setImageBitmap(photo);
+            selectedImageButton.setImageURI(uriPhoto);
 
             if (selectedImageButton == button1){
                 bmp1 = photo;
@@ -375,10 +376,9 @@ public class OrderDetail extends AppCompatActivity {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             final Uri imageUri = data.getData();
             final InputStream imageStream;
-            try {
-                imageStream = getContentResolver().openInputStream(imageUri);
-                final Bitmap photo = BitmapFactory.decodeStream(imageStream);
-                selectedImageButton.setImageBitmap(photo);
+                Uri uriPhoto = data.getData();
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                selectedImageButton.setImageURI(uriPhoto);
 
                 if (selectedImageButton == button1){
                     bmp1 = photo;
@@ -392,10 +392,6 @@ public class OrderDetail extends AppCompatActivity {
                 if (selectedImageButton == button4){
                     bmp4 = photo;
                 }
-
-            } catch (FileNotFoundException e) {
-                Toast.makeText(OrderDetail.this, "Something went wrong", Toast.LENGTH_LONG).show();
-            }
         }
         selectedImageButton = null;
     }
