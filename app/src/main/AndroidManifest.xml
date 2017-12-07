@@ -14,13 +14,18 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="com.hopcontracting.ian.hopworkorder.LoginActivity"
-            android:label="@string/app_name" />
-        <activity android:name="com.hopcontracting.ian.hopworkorder.ListActivity" />
-        <activity android:name="com.hopcontracting.ian.hopworkorder.OrderDetail" />
-        <activity android:name="com.hopcontracting.ian.hopworkorder.CustomerFeedbackActivity" />
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.hopcontracting.ian.hopworkorder.ListActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.hopcontracting.ian.hopworkorder.OrderDetail"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.hopcontracting.ian.hopworkorder.CustomerFeedbackActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.hopcontracting.ian.hopworkorder.UserSelector"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,6 +36,7 @@
         <activity
             android:name="com.hopcontracting.ian.hopworkorder.CustomerRequestForm"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

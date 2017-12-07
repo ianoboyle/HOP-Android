@@ -298,8 +298,13 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                     == PackageManager.PERMISSION_GRANTED) {
 
                 //Request location updates:
+                try{
                 locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 400, 1, this);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 400, 1, this);}
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
 

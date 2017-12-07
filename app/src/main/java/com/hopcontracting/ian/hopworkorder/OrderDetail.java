@@ -38,9 +38,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.hopcontracting.ian.hopworkorder.Utils.FileUtils;
 
 import org.json.JSONArray;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -343,6 +345,10 @@ public class OrderDetail extends AppCompatActivity {
                             Intent pickPhoto = new Intent(Intent.ACTION_PICK,
                                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             startActivityForResult(pickPhoto , 1);//one can be replaced with any action code
+                            /*Intent pickPhoto = new Intent();
+                            pickPhoto.setType("image*//*");
+                            pickPhoto.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(Intent.createChooser(pickPhoto,"Select a picture"), 1);*/
                         }
                         if (which == 1){
                             Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -356,8 +362,14 @@ public class OrderDetail extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && requestCode != 1) {
             Uri uriPhoto = data.getData();
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            selectedImageButton.setImageURI(uriPhoto);
+            //Bitmap photo = (Bitmap) data.getExtras().get("data");
+            //selectedImageButton.setImageURI(uriPhoto);
+            String picturePath = FileUtils.getPath(this,uriPhoto);
+            Bitmap photo = BitmapFactory.decodeFile(picturePath);
+            selectedImageButton.setImageBitmap(photo);
+
+
+
 
             if (selectedImageButton == button1){
                 bmp1 = photo;
