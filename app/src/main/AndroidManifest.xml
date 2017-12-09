@@ -15,12 +15,22 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
         <activity
             android:name="com.hopcontracting.ian.hopworkorder.LoginActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity android:name="com.hopcontracting.ian.hopworkorder.ListActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
         <activity android:name="com.hopcontracting.ian.hopworkorder.OrderDetail"
             android:screenOrientation="portrait"/>

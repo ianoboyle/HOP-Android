@@ -19,6 +19,7 @@ import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -88,6 +89,7 @@ public class OrderDetail extends AppCompatActivity {
     private File newfile;
     private File cameraFile;
     final String dir = Environment.getExternalStoragePublicDirectory(".HopConsulting") + "/Folder/";
+    //final String dir = Environment.getExternalStorageDirectory().getAbsolutePath();
     private boolean progress=true;
 
     @Override
@@ -399,17 +401,22 @@ public class OrderDetail extends AppCompatActivity {
                             }
 
                             cameraImage = dir + DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString() + ".png";
+                            File folder=new File(dir);
                             cameraFile = new File(cameraImage);
                             try
                             {
+                                folder.mkdirs();
                                 cameraFile.createNewFile();
                             }
                             catch (IOException e)
                             {
+                                e.printStackTrace();
                             }
-                            Uri outputFileUri = Uri.fromFile(cameraFile);
+                           // Uri outputFileUri = Uri.fromFile(cameraFile);
+                            Uri outputFileUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", cameraFile);
                             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+                            cameraIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                             startActivityForResult(cameraIntent, 0);
                         }
                     }

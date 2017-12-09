@@ -55,6 +55,7 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 final Intent goToNextActivity = new Intent(getApplicationContext(), ListActivity.class);
+                goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
 
                 String url = getString(R.string.global_url) + "/works/"+order.id+"/";
@@ -70,6 +71,7 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
                         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
+                                        System.gc();
                                         startActivity(goToNextActivity);                                    }
                                 });
                         alertDialog.show();
