@@ -1,5 +1,6 @@
 package com.hopcontracting.ian.hopworkorder;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -7,16 +8,22 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -24,11 +31,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import id.zelory.compressor.Compressor;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -39,13 +48,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.hopcontracting.ian.hopworkorder.Utils.FileUtils;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
-
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,21 +65,30 @@ public class OrderDetail extends AppCompatActivity {
     private static final int CAMERA_REQUEST = 1888;
     private static int RESULT_LOAD_IMAGE = 1;
     final ArrayList<WorkType> workTypesList = new ArrayList<WorkType>();
-    ImageButton selectedImageButton;
+    ImageView selectedImageButton;
     ConstraintLayout mConstraintLayout;
 
     EditText reportField;
     Order order;
-    ImageButton button1;
+    ImageView button1;
     Bitmap bmp1;
-    ImageButton button2;
+    ImageView button2;
     Bitmap bmp2;
-    ImageButton button3;
+    ImageView button3;
     Bitmap bmp3;
-    ImageButton button4;
+    ImageView button4;
     Bitmap bmp4;
+    Bitmap compressedBitmap;
+    File compressedFile=null;
+    File cameraCompressedFile=null;
+    String cameraImage;
 
     private View mProgressView;
+    private int MY_PERMISSIONS_REQUEST_READ_CONTACTS;
+    private File newfile;
+    private File cameraFile;
+    final String dir = Environment.getExternalStoragePublicDirectory(".HopConsulting") + "/Folder/";
+    private boolean progress=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,28 +111,32 @@ public class OrderDetail extends AppCompatActivity {
 
 
         // Setup Image buttons
-        button1 = (ImageButton) findViewById(R.id.imageButton);
-        button2 = (ImageButton) findViewById(R.id.imageButton2);
-        button3 = (ImageButton) findViewById(R.id.imageButton3);
-        button4 = (ImageButton) findViewById(R.id.imageButton4);
+        button1 = (ImageView) findViewById(R.id.imageButton);
+        button2 = (ImageView) findViewById(R.id.imageButton2);
+        button3 = (ImageView) findViewById(R.id.imageButton3);
+        button4 = (ImageView) findViewById(R.id.imageButton4);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OrderDetail.this.selectedImageButton = button1;
+                //OrderDetail.this.selectedImageButton = button1;
+                selectedImageButton=button1;
+
                 showPickImageDialog();
             }
         });
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OrderDetail.this.selectedImageButton = button2;
+                //OrderDetail.this.selectedImageButton = button2;
+                selectedImageButton=button2;
                 showPickImageDialog();
             }
         });
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OrderDetail.this.selectedImageButton = button3;
+                selectedImageButton=button3;
+
 
                 showPickImageDialog();
             }
@@ -121,7 +144,8 @@ public class OrderDetail extends AppCompatActivity {
         button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OrderDetail.this.selectedImageButton = button4;
+                selectedImageButton=button4;
+
                 showPickImageDialog();
             }
         });
@@ -342,17 +366,51 @@ public class OrderDetail extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0){
-                            Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                            /*Intent pickPhoto = new Intent(Intent.ACTION_PICK,
                                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            startActivityForResult(pickPhoto , 1);//one can be replaced with any action code
+                            startActivityForResult(pickPhoto , 1);//one can be replaced with any action code*/
                             /*Intent pickPhoto = new Intent();
                             pickPhoto.setType("image*//*");
                             pickPhoto.setAction(Intent.ACTION_GET_CONTENT);
                             startActivityForResult(Intent.createChooser(pickPhoto,"Select a picture"), 1);*/
+                            //Picking image from gallery
+                            if (ContextCompat
+                                    .checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                            {
+                                ActivityCompat
+                                        .requestPermissions(OrderDetail.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                            }
+                            Intent intent = new Intent();
+                            intent.setType("image/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(Intent.createChooser(intent, "Select a Picture"), 1);
+
                         }
                         if (which == 1){
-                            Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            startActivityForResult(takePicture, 0);//zero can be replaced with any action code
+                            //Getting Image from camera
+                            /*Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(takePicture, 0);//zero can be replaced with any action code*/
+
+                            if (ContextCompat
+                                    .checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                            {
+                                ActivityCompat
+                                        .requestPermissions(OrderDetail.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                            }
+
+                            cameraImage = dir + DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString() + ".png";
+                            cameraFile = new File(cameraImage);
+                            try
+                            {
+                                cameraFile.createNewFile();
+                            }
+                            catch (IOException e)
+                            {
+                            }
+                            Uri outputFileUri = Uri.fromFile(cameraFile);
+                            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+                            startActivityForResult(cameraIntent, 0);
                         }
                     }
                 });
@@ -361,15 +419,9 @@ public class OrderDetail extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && requestCode != 1) {
-            Uri uriPhoto = data.getData();
-            //Bitmap photo = (Bitmap) data.getExtras().get("data");
+            /*Uri uriPhoto = data.getData();
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
             //selectedImageButton.setImageURI(uriPhoto);
-            String picturePath = FileUtils.getPath(this,uriPhoto);
-            Bitmap photo = BitmapFactory.decodeFile(picturePath);
-            selectedImageButton.setImageBitmap(photo);
-
-
-
 
             if (selectedImageButton == button1){
                 bmp1 = photo;
@@ -382,13 +434,52 @@ public class OrderDetail extends AppCompatActivity {
             }
             if (selectedImageButton == button4){
                 bmp4 = photo;
+            }*/
+            Log.i("Demo Pic", Long.toString(cameraFile.getTotalSpace()));
+            try
+            {
+                cameraCompressedFile = new Compressor(getApplicationContext())
+                        .setQuality(50)
+                        .setCompressFormat(Bitmap.CompressFormat.JPEG).compressToFile(cameraFile);
+                Log.i("Demo Pic", Long.toString(cameraCompressedFile.length()));
             }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            /*Picasso.with(getApplicationContext()).load(Uri.fromFile(compressedFile)).into(ivAvatar);*/
+            compressedBitmap = BitmapFactory.decodeFile(cameraCompressedFile.getAbsolutePath());
+            if (selectedImageButton == button1){
+                Picasso.with(getApplicationContext())
+                        .load(cameraCompressedFile)
+                        .into(button1);
+                bmp1=compressedBitmap;
+            }
+            if (selectedImageButton == button2){
+                Picasso.with(getApplicationContext())
+                        .load(cameraCompressedFile)
+                        .into(button2);
+                bmp2=compressedBitmap;
+            }
+            if (selectedImageButton == button3){
+                Picasso.with(getApplicationContext())
+                        .load(cameraCompressedFile)
+                        .into(button3);
+                bmp3=compressedBitmap;
+            }
+            if (selectedImageButton == button4){
+                Picasso.with(getApplicationContext())
+                        .load(cameraCompressedFile)
+                        .into(button4);
+                bmp4=compressedBitmap;
+            }
+
 
         }
         if (requestCode == 1 && resultCode == RESULT_OK) {
             final Uri imageUri = data.getData();
             final InputStream imageStream;
-                Uri uriPhoto = data.getData();
+                /*Uri uriPhoto = data.getData();
                 Bitmap photo = (Bitmap) data.getExtras().get("data");
                 selectedImageButton.setImageURI(uriPhoto);
 
@@ -403,7 +494,58 @@ public class OrderDetail extends AppCompatActivity {
                 }
                 if (selectedImageButton == button4){
                     bmp4 = photo;
-                }
+                }*/
+            Uri uriPhoto = data.getData();
+            String imageFilePath = FileUtils.getPath(OrderDetail.this, uriPhoto);
+            /*Bitmap photo = (Bitmap) data.getExtras().get("data");
+            ByteArrayOutputStream outputstream = new ByteArrayOutputStream();
+            photo.compress(Bitmap.CompressFormat.JPEG,50,outputstream);
+
+            byte[] byteArray = outputstream.toByteArray();
+
+            compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);*/
+            newfile = new File(imageFilePath);
+            Log.d("OrderDetail", "onActivityResult: "+String.valueOf(newfile.length()));
+
+            try
+            {
+                compressedFile = new Compressor(getApplicationContext())
+                        .setQuality(50)
+                        .setCompressFormat(Bitmap.CompressFormat.JPEG).compressToFile(newfile);
+                Log.i("Demo Pic", Long.toString(compressedFile.length()));
+            }
+            catch (Exception e)
+            {}
+             compressedBitmap = BitmapFactory.decodeFile(compressedFile.getAbsolutePath());
+
+            if (selectedImageButton == button1){
+                Picasso.with(getApplicationContext())
+                        .load(compressedFile)
+                        .into(button1);
+                bmp1=compressedBitmap;
+            }
+            if (selectedImageButton == button2){
+                Picasso.with(getApplicationContext())
+                        .load(compressedFile)
+                        .into(button2);
+                bmp2=compressedBitmap;
+            }
+            if (selectedImageButton == button3){
+                Picasso.with(getApplicationContext())
+                        .load(compressedFile)
+                        .into(button3);
+                bmp3=compressedBitmap;
+            }
+            if (selectedImageButton == button4){
+                Picasso.with(getApplicationContext())
+                        .load(compressedFile)
+                        .into(button4);
+                bmp4=compressedBitmap;
+            }
+
+           /* Picasso.with(getApplicationContext())
+                    .load(compressedFile)
+                    .into(button2);*/
         }
         selectedImageButton = null;
     }
@@ -418,6 +560,13 @@ public class OrderDetail extends AppCompatActivity {
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
         // Setup Progress View
+        if (show)
+        {
+            progress=false;
+        }
+        else{
+            progress = true;
+        }
         mConstraintLayout = (ConstraintLayout) findViewById(R.id.constraint_layout);
         mProgressView = (ProgressBar) findViewById(R.id.order_detail_progress);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
@@ -447,5 +596,19 @@ public class OrderDetail extends AppCompatActivity {
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mConstraintLayout.setVisibility(show ? View.GONE : View.VISIBLE);
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        System.gc();
+    }
+
+    @Override
+    public void onBackPressed() {
+        /*if (progress) {
+            super.onBackPressed();
+        }
+        */
     }
 }

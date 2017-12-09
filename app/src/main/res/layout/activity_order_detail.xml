@@ -117,7 +117,7 @@
         app:layout_constraintTop_toBottomOf="@+id/address_text_view"
         app:layout_constraintVertical_bias="0.0" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/imageButton"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -130,7 +130,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:srcCompat="@drawable/gallery" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/imageButton3"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -143,7 +143,7 @@
         app:layout_constraintRight_toLeftOf="@+id/imageButton"
         app:srcCompat="@drawable/gallery" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/imageButton4"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -156,7 +156,7 @@
         app:layout_constraintLeft_toRightOf="@+id/imageButton2"
         app:srcCompat="@drawable/gallery" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/imageButton2"
         android:layout_width="60dp"
         android:layout_height="60dp"
