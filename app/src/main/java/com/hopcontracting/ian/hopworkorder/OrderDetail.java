@@ -613,6 +613,7 @@ public class OrderDetail extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         /*if (progress) {
             super.onBackPressed();
         }

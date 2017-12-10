@@ -143,7 +143,9 @@ public class LoginActivity extends AppCompatActivity {
                                 PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString("MYTOKEN", token).apply();
                                 showProgress(false);
                                 Intent goToNextActivity = new Intent(getApplicationContext(), ListActivity.class);
+                                goToNextActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(goToNextActivity);
+                                finish();
                             } catch (JSONException e) {
                                 e.printStackTrace();
 

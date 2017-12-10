@@ -30,7 +30,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity android:name="com.hopcontracting.ian.hopworkorder.ListActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
 
             android:screenOrientation="portrait"/>
         <activity android:name="com.hopcontracting.ian.hopworkorder.OrderDetail"

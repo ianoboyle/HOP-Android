@@ -55,7 +55,8 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 final Intent goToNextActivity = new Intent(getApplicationContext(), ListActivity.class);
-                goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                goToNextActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 
                 String url = getString(R.string.global_url) + "/works/"+order.id+"/";
@@ -71,8 +72,11 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
                         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        System.gc();
-                                        startActivity(goToNextActivity);                                    }
+
+
+                                        startActivity(goToNextActivity);
+                                        finish();
+                                    }
                                 });
                         alertDialog.show();
                     }
@@ -161,5 +165,10 @@ public class CustomerFeedbackActivity extends AppCompatActivity {
             mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
             mConstraintLayout.setVisibility(show ? View.GONE : View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
     }
 }

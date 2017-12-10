@@ -85,6 +85,7 @@ public class ListActivity extends AppCompatActivity implements LocationListener 
                 PreferenceManager.getDefaultSharedPreferences(this).edit().remove("MYTOKEN").apply();
                 final Intent intent = new Intent(ListActivity.this, UserSelector.class);
                 startActivity(intent);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -75,6 +75,7 @@ public class UserSelector extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         Intent goToNextActivity = new Intent(getApplicationContext(), ListActivity.class);
                         startActivity(goToNextActivity);
+                        finish();
                     }
                 }, new Response.ErrorListener() {
 
