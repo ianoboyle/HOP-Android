@@ -279,6 +279,10 @@ public class OrderDetail extends AppCompatActivity {
                     showProgress(true);
 
                     final Intent intent = new Intent(OrderDetail.this, CustomerFeedbackActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+
 
                     String url = getString(R.string.global_url) + "/works/" + order.id + "/";
 
@@ -290,6 +294,7 @@ public class OrderDetail extends AppCompatActivity {
                             showProgress(false);
                             intent.putExtra("Order", order);
                             startActivity(intent);
+                            finish();
                         }
                     }, new Response.ErrorListener() {
                         @Override
