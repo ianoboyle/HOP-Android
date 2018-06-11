@@ -18,7 +18,11 @@
     <string name="submit_report">Submit Report</string>
     <string name="report_hint">Enter your report here</string>
     <string name="thank_you">Thank You!</string>
+<!--
     <string name="global_url">https://app.hopcontracting.net/api</string>
+-->
+    <string name="global_url">https://www.hopcontractingapps.net/api</string>
+
     <!--<string name="global_url">http://10.0.0.17:8000/api</string>-->
     <string name="welcome">Welcome!</string>
     <string name="location">Location:</string>
